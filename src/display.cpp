@@ -10,6 +10,28 @@
 #include "ht16k33.h"
 #include "display.h"
 
+#define FIRST_NUM 1
+#define SEC_NUM 3
+#define THRD_NUM 7
+#define FRTH_NUM 9
+
+#define POS_1 0
+#define POS_2 2
+#define POS_3 4
+#define POS_4 6
+#define POS_5 8
+
+#define O_CHAR 0b01011100
+#define P_CHAR 0b01110011
+#define U_CHAR 0b00111110
+/*#define A_CHAR
+#define E_CHAR
+#define D_CHAR
+#define N_CHAR
+#define M_CHAR
+#define S_CHAR
+#define W_CHAR*/
+
 int disp_off()
 {
 	const int addr = HW_I2C_ADDR_HT16K33;
@@ -119,5 +141,32 @@ static void rotate_message_left()
 int disp_show_message(display_message_t message)
 {
 	const int addr = HW_I2C_ADDR_HT16K33;
+
+
+	//retmsg[SEC_NUM] | O_CHAR;
+
+	switch (message) {
+	case DISP_MSG_UP:
+		disp_msg_data[FIRST_NUM] = 0;
+		disp_msg_data[SEC_NUM] = 0;
+		disp_msg_data[THRD_NUM] = 0;
+		disp_msg_data[FRTH_NUM] = 0;
+
+		disp_msg_data[THRD_NUM] | U_CHAR;
+		disp_msg_data[FRTH_NUM] | P_CHAR;
+		break;
+	case DISP_MSG_DOWN:
+		break;
+	case DISP_MSG_SAME:
+		break;
+	};
+
 	return i2c_write( addr, disp_msg_data,10 );
+}
+
+void clear_nums() {
+	disp_msg_data[FIRST_NUM] = 0;
+	disp_msg_data[SEC_NUM] = 0;
+	disp_msg_data[THRD_NUM] = 0;
+	disp_msg_data[FRTH_NUM] = 0;
 }
