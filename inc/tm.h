@@ -11,5 +11,6 @@
 int tm_handle_sensor();
 display_message_t tm_get_trend();
 void tm_reset_data();
+char shift_right(char* a, int length);
 
 #endif /* TM_H_ */

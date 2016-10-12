@@ -54,8 +54,11 @@ int main(void)
 		 * TODO: Oscar to remove this
 		 */
 		tm_handle_sensor();
-		trend = tm_get_trend();
-		disp_show_message( trend );
+		display_message_t newTrend = tm_get_trend();
+		//if ( trend == newTrend)
+			//rotate_message_left();
+		//else
+			disp_show_message( trend );
 		/**
 		 * TODO: Oscar to remove until here
 		 */
