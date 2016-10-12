@@ -53,6 +53,7 @@ int main(void)
 		/**
 		 * TODO: Oscar to remove this
 		 */
+		delay_1s();
 		tm_handle_sensor();
 		trend = tm_get_trend();
 		disp_show_message( trend );
