@@ -41,24 +41,25 @@ int main(void)
 	 * TODO: Oscar to remove this
 	 */
 	int i;
+
+	// So i went completely wrong direction forgetting the scope rules
+
 	for( i=0; i<9; i++){
-		tm_handle_sensor();
+		temperatures[temp_index]=tm_handle_sensor();
 	}
+	tm_update_average();
 	display_message_t trend = tm_get_trend();
 	disp_show_message( trend );
 	/**
 	 * TODO: Oscar to remove until here
 	 */
 	while( 1 ){
-		/**
-		 * TODO: Oscar to remove this
-		 */
-		tm_handle_sensor();
+
+		temperatures[temp_index] = tm_handle_sensor();
+		tm_update_average();
 		trend = tm_get_trend();
 		disp_show_message( trend );
-		/**
-		 * TODO: Oscar to remove until here
-		 */
+		delay_1s();
 	}
     return 0 ;
 }
