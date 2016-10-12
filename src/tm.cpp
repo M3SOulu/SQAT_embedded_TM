@@ -33,21 +33,44 @@ display_message_t temp_trend = DISP_MSG_SAME;
 
 void tm_reset_data()
 {
-
+temp_sum = 0;
+temp_current_average = 0;
 }
 
 void tm_update_average(int temp)
 {
 
+	for (int i =1; i < TEMP_BUFFER; i++)
+	{
+		temp_sum += temperatures[i];
+	}
+	temp_prev_average = temp_current_average;
+	temp_current_average = temp_sum / TEMP_BUFFER;
+
 }
 
 int tm_handle_sensor()
 {
-	int rc;
+	//int rc;
+	for (int i = 0; i < TEMP_BUFFER; i++)
+	{
+		temperatures[i] = i2c_read(0x90, 0, 0, 0,1);
+	}
+	tm_update_average(temperatures[8]); //actual meaning to be implemented
 	return -1;
 }
 
 display_message_t tm_get_trend()
 {
+	if (temp_current_average > temp_prev_average)
+	{
+		return DISP_MSG_UP;
+	}
+	if (temp_current_average < temp_prev_average){
+		return DISP_MSG_DOWN;
+	}
+	else
+	{
 	return DISP_MSG_SAME; // default
+	}
 }

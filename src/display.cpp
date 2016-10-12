@@ -30,6 +30,28 @@ static char disp_msg_data[10]={
 		3,0,
 		4,0,
 };
+static char disp_msg_up[10]={
+		0,0,
+		1,0,
+		2,0,
+		3,28,
+		4,115,
+};
+static char disp_msg_down[10]={
+		0,94,
+		1,63,
+		2,0,
+		3,126,
+		4,84,
+};
+static char disp_msg_same[10]={
+		0,109,
+		1,119,
+		2,0,
+		3,55,
+		4,121,
+};
+
 
 static int disp_last_message = DISP_MSG_FIRST;
 
@@ -106,7 +128,11 @@ int disp_on(int alloff)
 
 static void rotate_message_left()
 {
+	/*if (message == disp_last_message)
+	{
+	//message characters are to be moved left
 
+	}*/
 }
 
 //
@@ -115,9 +141,27 @@ static void rotate_message_left()
 //   - DISP_MSG_SAME
 //   - DISP_MSG_UP
 // if message is same as previous then rotate left
+//if (display
+//
 //
 int disp_show_message(display_message_t message)
 {
 	const int addr = HW_I2C_ADDR_HT16K33;
-	return i2c_write( addr, disp_msg_data,10 );
+	if (message == DISP_MSG_UP)
+	{
+		return i2c_write( addr, disp_msg_up,10 );
+	}
+	if (message == DISP_MSG_DOWN)
+	{
+		return i2c_write( addr, disp_msg_down,10 );
+	}
+	if (message == DISP_MSG_SAME)
+	{
+		return i2c_write( addr, disp_msg_same,10 );
+	}
+	else
+	{
+		return i2c_write( addr, disp_msg_data,10 );
+	}
+
 }
