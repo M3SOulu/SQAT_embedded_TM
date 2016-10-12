@@ -33,12 +33,21 @@ display_message_t temp_trend = DISP_MSG_SAME;
 
 void tm_reset_data()
 {
-
+	for (int i = 0; i < 8; i++) {
+		temperatures[i] = 0;
+	}
 }
 
 void tm_update_average(int temp)
 {
-
+	temp = 0;
+	for (int i = 0; i < 8; i++) {
+		temp = temp + temperatures[i];
+	}
+	for (int j = 7; j > 1; j-- ) {
+		temperatures [j] = temperatures[j - 1];
+	}
+	//i2c_read(0x90, 0, 0, &data, 1);
 }
 
 int tm_handle_sensor()

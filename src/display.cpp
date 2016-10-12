@@ -106,6 +106,12 @@ int disp_on(int alloff)
 
 static void rotate_message_left()
 {
+	char aux;
+	aux = disp_msg_data[3];
+	disp_msg_data[3] = disp_msg_data[5];
+	disp_msg_data[5] = disp_msg_data[7];
+	disp_msg_data[7] = disp_msg_data[9];
+	disp_msg_data[9] = aux;
 
 }
 
@@ -119,5 +125,25 @@ static void rotate_message_left()
 int disp_show_message(display_message_t message)
 {
 	const int addr = HW_I2C_ADDR_HT16K33;
+	if (message == DISP_MSG_LAST) {
+		rotate_message_left();
+	}
+	else if (message == DISP_MSG_DOWN) {
+		disp_msg_data[3] = 94;
+		disp_msg_data[5] = 92;
+		disp_msg_data[7] = 126;
+		disp_msg_data[9] = 84;
+	}
+	else if (message == DISP_MSG_UP){
+		disp_reset(DISP_SHOW_NONE);
+		disp_msg_data[7] = 28;
+		disp_msg_data[9] = 115;
+	}
+	else if (message == DISP_MSG_SAME){
+		disp_msg_data[3] = 109;
+		disp_msg_data[5] = 119;
+		disp_msg_data[7] = 55;
+		disp_msg_data[9] = 121;
+	}
 	return i2c_write( addr, disp_msg_data,10 );
 }
