@@ -38,7 +38,7 @@ void tm_reset_data()
 
 void tm_update_average(int temp)
 {
-
+	//temp_current_avarage = (temp_prev_avarage + temp) / 2;
 }
 
 int tm_handle_sensor()
