@@ -15,8 +15,6 @@
 // Use these variables if you find them useful
 // throw them away if not
 
-#define TEMP_ADDR 0x70
-#define TEMP_BUFFER 8
 int temperatures[TEMP_BUFFER] = {0,0,0,0,0,0,0,0};
 
 int temp_index=0;
@@ -39,43 +37,40 @@ void tm_reset_data()
 void tm_update_average(int temp)
 {
 	temp_old_sum = temp_sum;
+	temp_prev_average = temp_current_average;
 	temp_sum = 0;
 	temperatures[temp_index] = temp;
 	temp_index = (temp_index + 1) % TEMP_BUFFER;
+
 	for (int i = 0; i < TEMP_BUFFER; i++) {
 		temp_sum = temp_sum + temperatures[i];
 	}
 
-	temp_prev_average = temp_current_average;
 	temp_current_average = temp_sum / TEMP_BUFFER;
-
-	//if ()
 }
 
 int tm_handle_sensor()
 {
-	int rc;
-	char *data;
+	char data = 0;
 
-	i2c_read(TEMP_ADDR, 0, 0, data, 1);
+	i2c_read(TEMP_ADDR, 0, 0, &data, 1);
 
-	if (!(*data < 0 || *data > 99))
-		tm_update_average(*data);
+	if (!(data < 0 || data > 99))
+		tm_update_average(data);
 
-	return *data;
+	return data;
 }
 
 display_message_t tm_get_trend()
 {
-	// at first return msg_first. then should show empty
+	if (temp_prev_average == temp_current_average)
+		temp_trend = DISP_MSG_SAME;
 
-	if (temp_prev_average == temp_current_average) {
-		return DISP_MSG_SAME;
-	} else if (temp_prev_average > temp_current_average) {
-		return DISP_MSG_DOWN;
-	} else if (temp_prev_average < temp_current_average) {
-		return DISP_MSG_UP;
-	}
+	if (temp_prev_average > temp_current_average)
+		temp_trend =  DISP_MSG_DOWN;
 
-	return DISP_MSG_SAME; // default
+	if (temp_prev_average < temp_current_average)
+		temp_trend =  DISP_MSG_UP;
+
+	return temp_trend;
 }
