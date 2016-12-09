@@ -36,6 +36,7 @@ typedef enum display_message_e {
 } display_message_t;
 
 int disp_show_message( display_message_t message );
+void rotate_message_left();
 
 #ifdef __cplusplus
 }
