@@ -43,6 +43,7 @@ void tm_update_average(int temp)
 
 int tm_handle_sensor()
 {
+
 	int rc;
 	return -1;
 }
