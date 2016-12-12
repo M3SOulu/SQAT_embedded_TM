@@ -24,41 +24,45 @@
 #include "display.h"
 //
 #include "tm.h"
+#define I2C_WRITE_LEN 10
+#define DEFAULT_TEMP_READ_LEN 1
 
 int main(void)
 {
 #if defined (__USE_LPCOPEN)
     SystemCoreClockUpdate();
 #endif
-
     swm_config_i2c();
     i2c_reset();
-	disp_on( DISP_SHOW_NONE );
+	disp_off();
 	disp_reset( DISP_SHOW_NONE );
 
 	tm_reset_data();
-	/**
-	 * TODO: Oscar to remove this
-	 */
-	int i;
-	for( i=0; i<9; i++){
-		tm_handle_sensor();
+	int i = 0;
+	int read_val = -1;
+
+	for (i = 0; i < 9; i++) {
+		read_val = -1;
+		while (read_val < 0 || read_val > 99) {
+			read_val = tm_handle_sensor();
+		}
 	}
+
+	disp_on( DISP_SHOW_NONE );
+
 	display_message_t trend = tm_get_trend();
 	disp_show_message( trend );
-	/**
-	 * TODO: Oscar to remove until here
-	 */
+
 	while( 1 ){
-		/**
-		 * TODO: Oscar to remove this
-		 */
-		tm_handle_sensor();
+		read_val = -1;
+		delay_1s();
+
+		while (read_val < 0 || read_val > 99) {
+			read_val = tm_handle_sensor();
+		}
+
 		trend = tm_get_trend();
 		disp_show_message( trend );
-		/**
-		 * TODO: Oscar to remove until here
-		 */
 	}
     return 0 ;
 }
