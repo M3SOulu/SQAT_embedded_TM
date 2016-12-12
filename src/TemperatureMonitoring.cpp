@@ -28,7 +28,7 @@
 int main(void)
 {
 #if defined (__USE_LPCOPEN)
-    SystemCoreClockUpdate();
+   SystemCoreClockUpdate();
 #endif
 
     swm_config_i2c();
