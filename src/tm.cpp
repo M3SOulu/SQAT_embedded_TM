@@ -22,6 +22,7 @@ int temperatures[TEMP_BUFFER] = {
 };
 
 int temp_index=0;
+int sensor_handled_counter = 0;
 
 int temp_sum=0;
 int temp_old_sum = 0;
@@ -33,21 +34,46 @@ display_message_t temp_trend = DISP_MSG_SAME;
 
 void tm_reset_data()
 {
-
+	volatile int i=0;
+	for(i=0;i<8;i++){
+		temperatures[i]=0;
+	}
 }
 
 void tm_update_average(int temp)
 {
+	temp_prev_average= temp_current_average;
+
+		int i=0;
+		for(i=0;i<8;i++){
+			temp_sum=temp_sum+temperatures[i];
+		}
+		temp_current_average = temp_sum/8;
 
 }
 
 int tm_handle_sensor()
 {
-	int rc;
+	char temperature;
+	i2c_read(HW_I2C_TEMP_SENSOR, 0, 0, &temperature, 1);//Assuming this will give the temperature
+	temperatures[temp_index] = temperature;
+	temp_index++;
+	if(temp_index>7){
+		temp_index = 0;
+	}
+	tm_update_average(temperature);
 	return -1;
 }
 
 display_message_t tm_get_trend()
 {
-	return DISP_MSG_SAME; // default
+
+	if(temp_current_average>temp_prev_average){
+		return DISP_MSG_UP;
+	}else if(temp_current_average<temp_prev_average){
+		return DISP_MSG_DOWN;
+	}else{
+		return DISP_MSG_SAME; // default
+	}
+
 }
