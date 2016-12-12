@@ -60,5 +60,21 @@ int main(void)
 		 * TODO: Oscar to remove until here
 		 */
 	}
+
+	int address = 0x90;
+	char * reg = 0;
+	int reglen = 0;
+	char data= 1;
+	int length= 1;
+
+
+	int address = 0x70;
+	char data[] = {0, 0, 1, 0, 2, 0, 3, 28, 4, 115};
+	//char data[] = {0, };
+	int length = 10;
+	i2c_write(address, data, length);
+
+	i2c_read(address, reg, reglen, data, length);
+
     return 0 ;
 }
